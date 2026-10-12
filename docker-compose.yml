@@ -1,0 +1,16 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DATA_DIR: /app/data/raw
+      DATABASE_PATH: /app/data/runtime/serving.db
+      MODEL_PATH: /app/artifacts/delay-model.json
+      QUALITY_REPORT_PATH: /app/artifacts/data-quality-report.json
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+    volumes:
+      - serving_data:/app/data/runtime
+volumes:
+  serving_data:

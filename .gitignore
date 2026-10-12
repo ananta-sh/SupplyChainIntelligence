@@ -1,0 +1,5 @@
+target/
+data/serving.db
+.env
+logs/
+.idea/

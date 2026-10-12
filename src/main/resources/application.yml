@@ -1,0 +1,15 @@
+server:
+  port: ${PORT:8080}
+spring:
+  application:
+    name: supply-chain-intelligence
+  datasource:
+    url: jdbc:sqlite:${DATABASE_PATH:./data/serving.db}
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 1
+app:
+  data-dir: ${DATA_DIR:./data/raw}
+  model-path: ${MODEL_PATH:./artifacts/delay-model.json}
+  quality-report-path: ${QUALITY_REPORT_PATH:./artifacts/data-quality-report.json}
+  mode: ${APP_MODE:serve}

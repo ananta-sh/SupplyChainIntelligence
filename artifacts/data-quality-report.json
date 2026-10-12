@@ -1,0 +1,166 @@
+{
+  "datasets" : {
+    "ports" : 25,
+    "port_events" : 25000,
+    "shipments" : 5028
+  },
+  "checks_with_findings" : 13,
+  "policy" : "Percentages use rows in the named raw dataset. Checks overlap and are not additive.",
+  "checks" : [ {
+    "check_name" : "shipment_duplicate_id",
+    "dataset" : "shipments",
+    "rows_affected" : 56,
+    "total_rows" : 5028,
+    "percent_of_total" : 1.114,
+    "severity" : "critical",
+    "recommended_action" : "Keep first row by shipment_id and flag conflicts.",
+    "detection" : "Repeated shipment_id values."
+  }, {
+    "check_name" : "event_duplicate_id",
+    "dataset" : "port_events",
+    "rows_affected" : 206,
+    "total_rows" : 25000,
+    "percent_of_total" : 0.824,
+    "severity" : "warning",
+    "recommended_action" : "Keep first event_id during curation.",
+    "detection" : "Repeated event_id values."
+  }, {
+    "check_name" : "exact_duplicate_shipment_row",
+    "dataset" : "shipments",
+    "rows_affected" : 16,
+    "total_rows" : 5028,
+    "percent_of_total" : 0.318,
+    "severity" : "warning",
+    "recommended_action" : "Drop exact duplicate rows during curation.",
+    "detection" : "Every column equals a prior row."
+  }, {
+    "check_name" : "unknown_origin_port",
+    "dataset" : "shipments",
+    "rows_affected" : 222,
+    "total_rows" : 5028,
+    "percent_of_total" : 4.415,
+    "severity" : "critical",
+    "recommended_action" : "Quarantine shipments with an unknown origin.",
+    "detection" : "origin_port is absent from ports.csv."
+  }, {
+    "check_name" : "unknown_destination_port",
+    "dataset" : "shipments",
+    "rows_affected" : 253,
+    "total_rows" : 5028,
+    "percent_of_total" : 5.032,
+    "severity" : "critical",
+    "recommended_action" : "Quarantine shipments with an unknown destination.",
+    "detection" : "destination_port is absent from ports.csv."
+  }, {
+    "check_name" : "unknown_event_port",
+    "dataset" : "port_events",
+    "rows_affected" : 983,
+    "total_rows" : 25000,
+    "percent_of_total" : 3.932,
+    "severity" : "critical",
+    "recommended_action" : "Quarantine events whose port_code is absent from ports.csv.",
+    "detection" : "port_events.port_code is absent from ports.csv."
+  }, {
+    "check_name" : "missing_actual_timestamps",
+    "dataset" : "shipments",
+    "rows_affected" : 349,
+    "total_rows" : 5028,
+    "percent_of_total" : 6.941,
+    "severity" : "info",
+    "recommended_action" : "Preserve in-flight rows; omit missing outcomes from metrics and model labels.",
+    "detection" : "Actual departure or arrival is blank."
+  }, {
+    "check_name" : "missing_shipment_attributes",
+    "dataset" : "shipments",
+    "rows_affected" : 108,
+    "total_rows" : 5028,
+    "percent_of_total" : 2.148,
+    "severity" : "warning",
+    "recommended_action" : "Keep fields nullable and flag; do not fabricate values.",
+    "detection" : "Cargo, weight, or status is blank."
+  }, {
+    "check_name" : "noncanonical_status",
+    "dataset" : "shipments",
+    "rows_affected" : 54,
+    "total_rows" : 5028,
+    "percent_of_total" : 1.074,
+    "severity" : "warning",
+    "recommended_action" : "Normalize known case and aliases; preserve nulls for review.",
+    "detection" : "Status is blank or outside canonical vocabulary."
+  }, {
+    "check_name" : "noncanonical_cargo_type",
+    "dataset" : "shipments",
+    "rows_affected" : 261,
+    "total_rows" : 5028,
+    "percent_of_total" : 5.191,
+    "severity" : "info",
+    "recommended_action" : "Trim and title-case cargo labels during curation.",
+    "detection" : "Cargo label has whitespace or noncanonical casing."
+  }, {
+    "check_name" : "invalid_weight_or_container_count",
+    "dataset" : "shipments",
+    "rows_affected" : 132,
+    "total_rows" : 5028,
+    "percent_of_total" : 2.625,
+    "severity" : "critical",
+    "recommended_action" : "Quarantine nonpositive quantity values.",
+    "detection" : "Weight or container count is not positive."
+  }, {
+    "check_name" : "invalid_planned_timeline",
+    "dataset" : "shipments",
+    "rows_affected" : 0,
+    "total_rows" : 5028,
+    "percent_of_total" : 0.0,
+    "severity" : "critical",
+    "recommended_action" : "Quarantine unparsable or impossible planned dates.",
+    "detection" : "Booking, departure, or arrival cannot be parsed or ordered."
+  }, {
+    "check_name" : "invalid_actual_timeline",
+    "dataset" : "shipments",
+    "rows_affected" : 0,
+    "total_rows" : 5028,
+    "percent_of_total" : 0.0,
+    "severity" : "critical",
+    "recommended_action" : "Quarantine impossible actual timelines.",
+    "detection" : "Actual arrival precedes actual departure."
+  }, {
+    "check_name" : "missing_event_type_or_notes",
+    "dataset" : "port_events",
+    "rows_affected" : 2041,
+    "total_rows" : 25000,
+    "percent_of_total" : 8.164,
+    "severity" : "info",
+    "recommended_action" : "Retain events; leave missing descriptive fields null.",
+    "detection" : "Event type or notes is blank."
+  }, {
+    "check_name" : "duplicate_port_code",
+    "dataset" : "ports",
+    "rows_affected" : 0,
+    "total_rows" : 25,
+    "percent_of_total" : 0.0,
+    "severity" : "critical",
+    "recommended_action" : "Quarantine duplicate port codes before building the reference table.",
+    "detection" : "Repeated port_code values."
+  }, {
+    "check_name" : "missing_port_attributes",
+    "dataset" : "ports",
+    "rows_affected" : 1,
+    "total_rows" : 25,
+    "percent_of_total" : 4.0,
+    "severity" : "warning",
+    "recommended_action" : "Quarantine incomplete rows from the dimension and correct source metadata.",
+    "detection" : "One or more port reference attributes are blank."
+  }, {
+    "check_name" : "invalid_port_reference",
+    "dataset" : "ports",
+    "rows_affected" : 0,
+    "total_rows" : 25,
+    "percent_of_total" : 0.0,
+    "severity" : "critical",
+    "recommended_action" : "Quarantine invalid reference rows; congestion must be between 0 and 1.",
+    "detection" : "Missing code or congestion outside [0, 1]."
+  } ],
+  "checks_run" : 17,
+  "source" : "raw CSV files",
+  "report_version" : "1.0"
+}
